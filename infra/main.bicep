@@ -6,7 +6,7 @@ targetScope = 'subscription'
 param environmentName string
 
 @minLength(1)
-@description('Primary location for all resources. Must support Microsoft Foundry GPT-4 and Phi models.')
+@description('Primary location for all resources.')
 param location string = 'westus3'
 
 var tags = { 'azd-env-name': environmentName }
@@ -69,7 +69,7 @@ module appService './modules/appService.bicep' = {
   }
 }
 
-// Microsoft AI Foundry (Azure AI Services) with GPT-4 and Phi in westus3
+// Microsoft AI Foundry (Azure AI Services) with GPT-4o and Phi models
 module aiFoundry './modules/aiFoundry.bicep' = {
   name: 'aiFoundry'
   scope: rg

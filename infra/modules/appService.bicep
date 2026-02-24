@@ -30,7 +30,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
 resource appService 'Microsoft.Web/sites@2022-09-01' = {
   name: appName
   location: location
-  tags: union(tags, { 'azd-service-name': 'web' })
+  tags: union(tags, { 'azd-service-name': 'src' })
   kind: 'app,linux,container'
   identity: {
     type: 'SystemAssigned'

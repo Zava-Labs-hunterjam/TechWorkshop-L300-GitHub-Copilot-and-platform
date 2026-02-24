@@ -17,10 +17,10 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2024-04-01-preview' = 
   }
 }
 
-// GPT-4 model deployment
-resource gpt4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-04-01-preview' = {
+// GPT-4o model deployment
+resource gpt4oDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-04-01-preview' = {
   parent: aiServices
-  name: 'gpt-4'
+  name: 'gpt-4o'
   sku: {
     name: 'Standard'
     capacity: 10
@@ -28,8 +28,8 @@ resource gpt4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-0
   properties: {
     model: {
       format: 'OpenAI'
-      name: 'gpt-4'
-      version: '0613'
+      name: 'gpt-4o'
+      version: '2024-08-06'
     }
   }
 }
@@ -37,8 +37,8 @@ resource gpt4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-0
 // Phi model deployment (deployed after GPT-4 to avoid capacity conflicts)
 resource phiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-04-01-preview' = {
   parent: aiServices
-  name: 'Phi-35-mini-instruct'
-  dependsOn: [gpt4Deployment]
+  name: 'Phi-4-mini-instruct'
+  dependsOn: [gpt4oDeployment]
   sku: {
     name: 'GlobalStandard'
     capacity: 1
@@ -46,8 +46,8 @@ resource phiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-04
   properties: {
     model: {
       format: 'Microsoft'
-      name: 'Phi-3.5-mini-instruct'
-      version: '2'
+      name: 'Phi-4-mini-instruct'
+      version: '1'
     }
   }
 }
