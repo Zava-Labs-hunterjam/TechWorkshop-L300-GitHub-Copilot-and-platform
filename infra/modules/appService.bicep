@@ -6,11 +6,18 @@ param acrLoginServer string
 param acrName string
 param appInsightsConnectionString string
 param appInsightsInstrumentationKey string
+param aiServicesName string
 
 // AcrPull built-in role definition ID
 var acrPullRoleDefinitionId = subscriptionResourceId(
   'Microsoft.Authorization/roleDefinitions',
   '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+)
+
+// Cognitive Services User built-in role definition ID
+var cognitiveServicesUserRoleId = subscriptionResourceId(
+  'Microsoft.Authorization/roleDefinitions',
+  'a97b65f3-24c7-4388-baec-2e87135dc908'
 )
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
@@ -74,6 +81,22 @@ resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   scope: acr
   properties: {
     roleDefinitionId: acrPullRoleDefinitionId
+    principalId: appService.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Reference the existing AI Services account to scope the role assignment
+resource aiServices 'Microsoft.CognitiveServices/accounts@2024-04-01-preview' existing = {
+  name: aiServicesName
+}
+
+// Grant the Web App's managed identity the Cognitive Services User role
+resource cognitiveServicesRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(aiServices.id, appService.id, cognitiveServicesUserRoleId)
+  scope: aiServices
+  properties: {
+    roleDefinitionId: cognitiveServicesUserRoleId
     principalId: appService.identity.principalId
     principalType: 'ServicePrincipal'
   }

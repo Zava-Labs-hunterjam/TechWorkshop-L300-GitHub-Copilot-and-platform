@@ -66,7 +66,9 @@ module appService './modules/appService.bicep' = {
     acrName: acr.outputs.name
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsInstrumentationKey: appInsights.outputs.instrumentationKey
+    aiServicesName: aiFoundry.outputs.name
   }
+  dependsOn: [aiFoundry]
 }
 
 // Microsoft AI Foundry (Azure AI Services) with GPT-4o and Phi models
@@ -77,6 +79,7 @@ module aiFoundry './modules/aiFoundry.bicep' = {
     name: 'aif-${resourceToken}'
     location: location
     tags: tags
+    logAnalyticsWorkspaceId: logAnalytics.outputs.id
   }
 }
 

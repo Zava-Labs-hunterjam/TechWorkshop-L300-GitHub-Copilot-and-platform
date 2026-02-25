@@ -1,6 +1,7 @@
 param name string
 param location string
 param tags object = {}
+param logAnalyticsWorkspaceId string
 
 // Microsoft AI Foundry uses the AIServices kind of CognitiveServices
 resource aiServices 'Microsoft.CognitiveServices/accounts@2024-04-01-preview' = {
@@ -14,6 +15,7 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2024-04-01-preview' = 
   properties: {
     customSubDomainName: name
     publicNetworkAccess: 'Enabled'
+    disableLocalAuth: true
   }
 }
 
@@ -49,6 +51,27 @@ resource phiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-04
       name: 'Phi-4-mini-instruct'
       version: '1'
     }
+  }
+}
+
+// Diagnostic settings – send all log categories to Log Analytics
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${name}-diag'
+  scope: aiServices
+  properties: {
+    workspaceId: logAnalyticsWorkspaceId
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
   }
 }
 
