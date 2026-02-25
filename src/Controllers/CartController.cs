@@ -7,11 +7,13 @@ namespace ZavaStorefront.Controllers
     {
         private readonly ILogger<CartController> _logger;
         private readonly CartService _cartService;
+        private readonly IConfiguration _configuration;
 
-        public CartController(ILogger<CartController> logger, CartService cartService)
+        public CartController(ILogger<CartController> logger, CartService cartService, IConfiguration configuration)
         {
             _logger = logger;
             _cartService = cartService;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
