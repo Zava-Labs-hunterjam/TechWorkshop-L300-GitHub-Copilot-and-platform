@@ -67,6 +67,7 @@ module appService './modules/appService.bicep' = {
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsInstrumentationKey: appInsights.outputs.instrumentationKey
     aiServicesName: aiFoundry.outputs.name
+    aiServicesEndpoint: aiFoundry.outputs.endpoint
   }
   dependsOn: [aiFoundry]
 }
@@ -80,6 +81,19 @@ module aiFoundry './modules/aiFoundry.bicep' = {
     location: location
     tags: tags
     logAnalyticsWorkspaceId: logAnalytics.outputs.id
+  }
+}
+
+// Azure Workbook – AI Services Observability
+module workbook './modules/workbook.bicep' = {
+  name: 'workbook'
+  scope: rg
+  params: {
+    name: 'AI Services Observability'
+    location: location
+    tags: tags
+    logAnalyticsWorkspaceId: logAnalytics.outputs.id
+    workbookContent: loadTextContent('./modules/workbook.json')
   }
 }
 

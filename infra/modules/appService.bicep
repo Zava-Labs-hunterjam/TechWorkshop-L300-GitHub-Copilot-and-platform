@@ -7,6 +7,7 @@ param acrName string
 param appInsightsConnectionString string
 param appInsightsInstrumentationKey string
 param aiServicesName string
+param aiServicesEndpoint string
 
 // AcrPull built-in role definition ID
 var acrPullRoleDefinitionId = subscriptionResourceId(
@@ -64,6 +65,14 @@ resource appService 'Microsoft.Web/sites@2022-09-01' = {
         {
           name: 'DOCKER_REGISTRY_SERVER_URL'
           value: 'https://${acrLoginServer}'
+        }
+        {
+          name: 'WEBSITES_PORT'
+          value: '8080'
+        }
+        {
+          name: 'AiFoundry__Endpoint'
+          value: aiServicesEndpoint
         }
       ]
     }
