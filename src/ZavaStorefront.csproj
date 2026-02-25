@@ -7,6 +7,8 @@
     <UserSecretsId>d905b90e-9fc6-4baa-be32-3255842b2680</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.AI.ContentSafety" Version="1.0.0" />
+    <PackageReference Include="Azure.Identity" Version="1.13.2" />
   </ItemGroup>
 
 </Project>

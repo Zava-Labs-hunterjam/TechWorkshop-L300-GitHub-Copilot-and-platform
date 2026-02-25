@@ -1,3 +1,5 @@
+using Azure.AI.ContentSafety;
+using Azure.Identity;
 using ZavaStorefront.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,15 @@ builder.Services.AddSession(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddScoped<CartService>();
+builder.Services.AddSingleton<Azure.Core.TokenCredential>(new DefaultAzureCredential());
+builder.Services.AddSingleton<ContentSafetyClient>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var endpoint = config["AiFoundry:Endpoint"]
+        ?? throw new InvalidOperationException("AiFoundry:Endpoint is not configured.");
+    var credential = sp.GetRequiredService<Azure.Core.TokenCredential>();
+    return new ContentSafetyClient(new Uri(endpoint), credential);
+});
 builder.Services.AddHttpClient<ChatService>();
 
 var app = builder.Build();
